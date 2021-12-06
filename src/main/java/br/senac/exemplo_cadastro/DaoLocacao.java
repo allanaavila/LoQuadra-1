@@ -8,20 +8,20 @@ import java.util.List;
 
 public class DaoLocacao {
 
+	
 	public static void inserir_locacao(Locacao locacao) throws Exception {
-		String sql = "INSERT INTO locacao(id_usuario, id_quadra, id_pagamento, data_hora_inicial, data_hora_final, valor, status_locacao) VALUES(?, ?, ?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO locacao(id_usuario, id_quadra, id_pagamento, data_hora_inicial, data_hora_final, valor, status_locacao) SELECT id_usuario,(SELECT id_quadra FROM quadra WHERE nome_quadra = ?),(SELECT id_pagamento FROM pagamento WHERE tipo_pagamento = ?), ?,  ?, ?, ? FROM usuario WHERE nome  = ? ;";
 
 		//try-with-resources
 		try (PreparedStatement ps = DB.connect().prepareStatement(sql)){
 
-			ps.setInt(1, locacao.getIdUsuario());
-			ps.setInt(2, locacao.getIdQuadra());
-			ps.setInt(3, locacao.getIdPagamento());
-			ps.setString(4, locacao.getData_hora_inicial());
-			ps.setString(5, locacao.getData_hora_final());
-			ps.setFloat(6, locacao.getValor());
-			ps.setString(7, locacao.getStatus_locacao());
-
+			ps.setString(1, locacao.getQuadra_nome());
+			ps.setString(2, locacao.getTipo_pagamento());
+			ps.setString(3, locacao.getData_hora_inicial());
+			ps.setString(4, locacao.getData_hora_final());
+			ps.setFloat(5, locacao.getValor());
+			ps.setString(6, locacao.getStatus_locacao());
+			ps.setString(7, locacao.getNome());
 			ps.execute();
 		}
 
@@ -29,7 +29,7 @@ public class DaoLocacao {
 
 	public static List<Locacao> listar_locacao()throws Exception  {
 
-		String sql = "SELECT * FROM locacao";
+		String sql = "SELECT Q.nome_quadra AS quadra_nome, L.data_hora_inicial, L.data_hora_final, L.valor, L.status_locacao, U.nome, P.tipo_pagamento FROM quadra AS Q LEFT JOIN locacao AS L ON L.id_quadra=Q.id_quadra LEFT JOIN usuario AS U ON L.id_usuario=U.id_usuario LEFT JOIN pagamento P ON P.id_pagamento=L.id_pagamento WHERE L.valor <> '0'";
 
 		List<Locacao> resultados = new ArrayList<Locacao>();
 
@@ -38,11 +38,10 @@ public class DaoLocacao {
 
 			while(rs.next()) {
 				Locacao locacao = new Locacao();
-
-				locacao.setId(rs.getInt("id_locacao"));
-				locacao.setIdUsuario(rs.getInt("id_usuario"));
-				locacao.setIdQuadra(rs.getInt("id_quadra"));
-				locacao.setIdPagamento(rs.getInt("id_pagamento"));
+				
+				locacao.setNome(rs.getString("nome"));
+				locacao.setQuadra_nome(rs.getString("quadra_nome"));
+				locacao.setTipo_pagamento(rs.getString("tipo_pagamento"));
 				locacao.setData_hora_inicial(rs.getString("data_hora_inicial"));
 				locacao.setData_hora_final(rs.getString("data_hora_final"));
 				locacao.setValor(rs.getFloat("valor"));
@@ -52,37 +51,6 @@ public class DaoLocacao {
 			}
 		}
 		return resultados;
-	}
-
-	public static void atualizar_locacao(Locacao locacao) throws Exception {
-		String sql = "UPDATE locacao SET id_usuario = ?, id_quadra = ?, id_pagamento = ?, data_hora_inicial = ?, data_hora_final = ?, valor = ?, status_locacao = ? WHERE id_locacao = ?;";
-
-		//try-with-resources
-		try (PreparedStatement ps = DB.connect().prepareStatement(sql)){
-			ps.setInt(1, locacao.getIdUsuario());
-			ps.setInt(2, locacao.getIdQuadra());
-			ps.setInt(3, locacao.getIdPagamento());
-			ps.setString(4, locacao.getData_hora_inicial());
-			ps.setString(5, locacao.getData_hora_final());
-			ps.setFloat(6, locacao.getValor());
-			ps.setString(7, locacao.getStatus_locacao());
-			ps.setInt(8, locacao.getId());
-
-			ps.execute();
-		}
-
-	}
-
-	public static void deletar_locacao(Locacao locacao) throws Exception {
-		String sql = "DELETE FROM locacao  WHERE id_locacao = ?;";
-
-		//try-with-resources
-		try (PreparedStatement ps = DB.connect().prepareStatement(sql)){
-			ps.setInt(1, locacao.getId());
-
-			ps.execute();
-		}
-
 	}
 
 }
