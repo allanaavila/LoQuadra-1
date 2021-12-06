@@ -1,46 +1,14 @@
 package br.senac.exemplo_cadastro;
 
 public class Locacao {
-	private int id;
-	private int idUsuario;
-	private int idQuadra;
-	private int idPagamento;
+	
 	private String data_hora_inicial;
 	private String data_hora_final;
 	private float valor;
 	private String status_locacao;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getIdUsuario() {
-		return idUsuario;
-	}
-
-	public void setIdUsuario(int idUsuario) {
-		this.idUsuario = idUsuario;
-	}
-
-	public int getIdQuadra() {
-		return idQuadra;
-	}
-
-	public void setIdQuadra(int idQuadra) {
-		this.idQuadra = idQuadra;
-	}
-
-	public int getIdPagamento() {
-		return idPagamento;
-	}
-
-	public void setIdPagamento(int idPagamento) {
-		this.idPagamento = idPagamento;
-	}
+	private String quadra_nome;
+	private String nome;
+	private String tipo_pagamento;
 
 	public String getData_hora_inicial() {
 		return data_hora_inicial;
@@ -73,5 +41,31 @@ public class Locacao {
 	public void setStatus_locacao(String status_locacao) {
 		this.status_locacao = status_locacao;
 	}
+
+	public String getQuadra_nome() {
+		return quadra_nome;
+	}
+
+	public void setQuadra_nome(String quadra_nome) {
+		this.quadra_nome = quadra_nome;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getTipo_pagamento() {
+		return tipo_pagamento;
+	}
+
+	public void setTipo_pagamento(String tipo_pagamento) {
+		this.tipo_pagamento = tipo_pagamento;
+	}
+	
+	
 
 }
